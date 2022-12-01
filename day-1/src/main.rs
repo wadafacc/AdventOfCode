@@ -9,21 +9,21 @@ fn main() {
     let reader = BufReader::new(file);
 
     // init some stuff
-    let mut max = 0;
     let mut sum = 0;
+    let mut list: Vec<i32> = Vec::new();
 
     for (index, line) in reader.lines().enumerate() {
         let line = line.unwrap();
 
         if line == "" {
-            // skip line & make new dwarf
-            if sum >= max {
-                max = sum;
-            }
+            list.push(sum);
             sum = 0;
         } else {
             sum += line.parse::<i32>().unwrap();
         }
     }
+
+    list.sort();
+    let max = list[list.len() - 1] + list[list.len() - 2] + list[list.len() - 3];
     println!("Max: {:?}", max);
 }
