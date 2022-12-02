@@ -36,33 +36,42 @@ fn main() {
         let line = line.unwrap();
 
         let mut split: Vec<&str> = line.split(" ").collect();
-
+        let mut enemy = split[0];
         //selection points
         if split[1] == "X" {
-            sum += 1;
-            if split[0] == "A" {
+            //lose
+            if enemy == "A" {
                 sum += 3;
             }
-            if split[0] == "C" {
-                sum += 6;
+            if enemy == "B" {
+                sum += 1;
+            }
+            if enemy == "C" {
+                sum += 2;
             }
         }
         if split[1] == "Y" {
-            sum += 2;
-            if split[0] == "B" {
-                sum += 3;
+            //draw
+            if enemy == "A" {
+                sum += 4;
             }
-            if split[0] == "A" {
+            if enemy == "B" {
+                sum += 5;
+            }
+            if enemy == "C" {
                 sum += 6;
             }
         }
         if split[1] == "Z" {
-            sum += 3;
-            if split[0] == "C" {
-                sum += 3;
+            //win
+            if enemy == "A" {
+                sum += 8;
             }
-            if split[0] == "B" {
-                sum += 6;
+            if enemy == "B" {
+                sum += 9;
+            }
+            if enemy == "C" {
+                sum += 7;
             }
         }
     }
