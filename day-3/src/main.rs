@@ -25,9 +25,6 @@ fn main() {
         x.remove(0);
         y.remove(0);
 
-        println!("{:?}", x);
-        println!("{:?}", y);
-
         for item in &x {
             if y.contains(item) {
                 let i = item.chars().next().unwrap();
