@@ -1,6 +1,5 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
-use std::ops::Index;
 
 fn main() {
     //init alphabet and use index pos as value
@@ -15,7 +14,7 @@ fn main() {
     let mut sum = 0;
     let mut lines: Vec<String> = Vec::new();
 
-    for (index, line) in reader.lines().enumerate() {
+    for (_index, line) in reader.lines().enumerate() {
         let line = line.unwrap();
         lines.push(line);
     }

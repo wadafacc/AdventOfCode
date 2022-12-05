@@ -32,11 +32,11 @@ fn main() {
 
     let mut sum = 0;
 
-    for (index, line) in reader.lines().enumerate() {
+    for (_index, line) in reader.lines().enumerate() {
         let line = line.unwrap();
 
-        let mut split: Vec<&str> = line.split(" ").collect();
-        let mut enemy = split[0];
+        let split: Vec<&str> = line.split(" ").collect();
+        let enemy = split[0];
         //selection points
         if split[1] == "X" {
             //lose

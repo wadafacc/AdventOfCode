@@ -1,5 +1,3 @@
-use std::env;
-use std::fs;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -12,7 +10,7 @@ fn main() {
     let mut sum = 0;
     let mut list: Vec<i32> = Vec::new();
 
-    for (index, line) in reader.lines().enumerate() {
+    for (_index, line) in reader.lines().enumerate() {
         let line = line.unwrap();
 
         if line == "" {
