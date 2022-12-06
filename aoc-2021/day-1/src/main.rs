@@ -1,20 +1,32 @@
 fn main() {
-    let file: Vec<&str> = include_str!("../data.txt").lines().collect();
+    let file: Vec<i32> = include_str!("../data.txt")
+        .lines()
+        .into_iter()
+        .map(|i| i.parse::<i32>().unwrap())
+        .collect();
 
-    println!("{:?}", check_signal(&file));
+    println!("{:?}", compare_signals(&file));
 }
 
-fn check_signal(input: &Vec<&str>) -> i32 {
+fn check_signal(input: &Vec<i32>) -> i32 {
     let mut counter = 0;
 
     input.into_iter().enumerate().skip(1).for_each(|(i, _s)| {
-        print!("{:?} | {:?} -> ", input[i - 1], input[i]);
-        if input[i - 1].parse::<i32>().unwrap() < input[i].parse::<i32>().unwrap() {
-            print!(" Bigger");
+        if input[i - 1] < input[i] {
             counter += 1;
         }
+    });
 
-        println!();
+    counter
+}
+
+fn compare_signals(input: &Vec<i32>) -> i32 {
+    let mut counter = 0;
+
+    (0..input.len() - 1).into_iter().skip(2).for_each(|i| {
+        if (input[i] + input[i - 1] + input[i - 2]) < (input[i - 1] + input[i] + input[i + 1]) {
+            counter += 1;
+        }
     });
 
     counter
