@@ -8,7 +8,7 @@ fn main() {
     println!("{:?}", compare_signals(&file));
 }
 
-fn check_signal(input: &Vec<i32>) -> i32 {
+fn _check_signal(input: &Vec<i32>) -> i32 {
     let mut counter = 0;
 
     input.into_iter().enumerate().skip(1).for_each(|(i, _s)| {
