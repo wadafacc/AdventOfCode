@@ -9,49 +9,44 @@ fn main() {
     let file = include_str!("../data.txt");
     let (crates, instructions) = file.split_once("\n\n").unwrap();
 
-    let sorted_crates = sort_crates(crates);
-    let sorted_instructions = sort_instructions(instructions);
+    let sorted_crates = stack_crates(crates);
+    let sorted_instructions = translate_instructions(instructions);
 
     // usage: set cratemover9001 to true for the second solution, otherwise i'll spit out the first.
-    move_crates(sorted_crates, sorted_instructions, true);
+    let top_crates = move_crates(sorted_crates, sorted_instructions, true);
+    println!("{:?}", top_crates);
 }
 
-fn move_crates(mut crates: Vec<Vec<char>>, instructions: Vec<Instruction>, cratemover9001: bool) {
+fn move_crates(
+    mut crates: Vec<Vec<char>>,
+    instructions: Vec<Instruction>,
+    cratemover9001: bool,
+) -> Vec<char> {
     for i in instructions {
         let mut storage: Vec<char> = Vec::new();
 
-        if cratemover9001 == false {
-            for _m in 1..=i.count {
-                let temp = crates[(i.from - 1)].pop().unwrap();
-                crates[(i.to - 1)].push(temp);
-            }
-        } else {
-            for _m in 1..=i.count {
-                let temp = crates[(i.from - 1)].pop().unwrap();
-                storage.push(temp);
-            }
-            println!("strg: {:?}", storage);
-            for m in storage.into_iter().rev() {
-                crates[(i.to - 1)].push(m);
-            }
+        for _m in 1..=i.count {
+            let temp = crates[(i.from - 1)].pop().unwrap();
+            storage.push(temp);
+        }
+        if cratemover9001 == true {
+            storage.reverse();
+        }
+        for m in storage.into_iter().rev() {
+            crates[(i.to - 1)].push(m);
         }
     }
 
-    for v in 0..crates.len() {
-        println!(
-            "index: {:?} | len: {:?} | last: {:?}",
-            v,
-            crates[v].len(),
-            crates[v].last().unwrap()
-        );
-    }
-    println!("String of last crates per stack");
-    for i in crates {
-        print!("{:?}", i[i.len() - 1]);
-    }
+    // pack it up
+    let mut packed_crates: Vec<char> = Vec::new();
+    crates.iter().for_each(|f| {
+        packed_crates.push(f[f.len() - 1]);
+    });
+
+    return packed_crates;
 }
 
-fn sort_crates(crates: &str) -> Vec<Vec<char>> {
+fn stack_crates(crates: &str) -> Vec<Vec<char>> {
     let crates: Vec<&str> = crates.lines().into_iter().collect();
 
     let mut stacks = Vec::<Vec<char>>::with_capacity(9); // change this number if necessary
@@ -72,11 +67,10 @@ fn sort_crates(crates: &str) -> Vec<Vec<char>> {
                 }
             });
     }
-
-    return stacks;
+    stacks
 }
 
-fn sort_instructions(instructions_unfiltered: &str) -> Vec<Instruction> {
+fn translate_instructions(instructions_unfiltered: &str) -> Vec<Instruction> {
     let mut instructions: Vec<Instruction> = Vec::new();
 
     for l in instructions_unfiltered.lines() {

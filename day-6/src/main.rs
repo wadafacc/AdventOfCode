@@ -3,10 +3,10 @@ use std::collections::HashSet;
 fn main() {
     let file = include_str!("../data.txt");
 
-    find_markers(file, 14);
+    println!("Index: {:?}", find_markers(file, 14));
 }
 
-fn find_markers(file: &str, marker_size: usize) {
+fn find_markers(file: &str, marker_size: usize) -> Option<usize> {
     let res = (0..file.len())
         .find(|&i| {
             file[i..i + marker_size]
@@ -16,8 +16,7 @@ fn find_markers(file: &str, marker_size: usize) {
                 == marker_size
         })
         .map(|ind| (ind + marker_size));
-
-    println!("Index: {:?}", res);
+    res
 }
 
 /*
