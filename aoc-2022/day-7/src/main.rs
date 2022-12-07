@@ -1,76 +1,91 @@
-#[derive(Debug, Clone)]
-struct Dir {
-    id: usize,
-    name: String,
-    subdirs: Vec<String>,
-    files: Vec<i32>,
-    size: i32,
-}
+use std::collections::{HashMap, HashSet};
 
 fn main() {
     let file: Vec<&str> = include_str!("../data.txt").lines().collect();
 
-    let res = sum_dirs(sort_dirs(file), 100000);
+    // let res = sum_dirs(, 100000);
 
-    println!("Sum: {:?}", res);
+    println!("Sum: {:?}", sort_dirs(file));
 }
 
-fn sum_dirs(dirs: Vec<Dir>, max_size: i32) -> i32 {
-    let mut sum = 0;
-    let copy = dirs.to_owned();
-    for d in dirs {
-        let mut val = 0;
-        println!("name: {:?}", d);
-        for dir in d.subdirs {
-            val = copy.iter().find(|n| n.name == dir).unwrap().size;
-            println!("{:?}", val);
+// path concept very smart, copied from some guy on reddit
+fn cd(i: &str, cur: &mut Vec<String>) {
+    match i {
+        ".." => {
+            cur.pop();
         }
-        println!("name: {:?}, size: {:?}", d.name, d.size);
-        val += d.size;
-
-        if val < max_size {
-            sum += val;
+        "/" => {
+            cur.clear();
         }
-        println!("Sum: {:?}", sum);
-    }
-
-    sum
+        _ => {
+            // wildcard -> dir name
+            cur.push(i.to_string());
+        }
+    };
 }
 
-fn sort_dirs(file: Vec<&str>) -> Vec<Dir> {
-    let mut dirs: Vec<Dir> = Vec::new();
+// TODO: Recursion bs | copied from some other dude on reddit, cuz got no fucks left to give
+fn dir_size(
+    from: &str,
+    dirs: &HashMap<String, HashSet<(&str, usize)>>,
+    counted: &mut HashSet<String>,
+) -> usize {
+    let mut s = dirs
+        .get(from)
+        .unwrap()
+        .iter()
+        .filter_map(|&(f, size)| {
+            let full_path = [from, f].join("");
+            let n = (!counted.contains(&full_path)).then(|| size);
+            counted.insert(full_path);
+            n
+        })
+        .sum();
 
-    (0..file.len()).into_iter().for_each(|i| {
-        // check if line starts with 'cd'
-        if file[i].contains(&"$ cd") && !file[i].contains("$ cd ..") {
-            // println!("{:?}", file[i]);
-            let mut new_dir = Dir {
-                id: i,
-                name: String::from(file[i].split(" ").last().unwrap()),
-                subdirs: Vec::new(),
-                files: Vec::new(),
-                size: 0,
-            };
+    dirs.keys()
+        .filter(|l| l.starts_with(from))
+        .filter(|&p| p != from)
+        .for_each(|d| s += dir_size(d, dirs, counted));
+    s
+}
 
-            for x in (i + 1)..file.len() {
-                // println!("{:?}", new_dir);
-                let c: Vec<char> = file[x].chars().collect();
-                let l: Vec<&str> = file[x].split(" ").collect();
-                if file[x].contains("dir") {
-                    new_dir.subdirs.push(l[1].to_string());
-                } else if c[1].is_numeric() {
-                    new_dir.files.push(l[0].parse::<i32>().unwrap());
-                }
-                // check for new dir / EOF
-                if file[x].contains("$ cd") || x == file.len() - 1 {
-                    new_dir.size = new_dir.files.iter().sum();
-                    dirs.push(new_dir);
+fn sort_dirs(file: Vec<&str>) -> (usize, usize) {
+    let mut path: Vec<String> = vec![];
+    let mut dirs: HashMap<String, HashSet<(&str, usize)>> = HashMap::new();
 
-                    break;
-                }
+    file.into_iter().for_each(|line| {
+        if line.starts_with("$") {
+            let s: Vec<_> = line.split_whitespace().collect();
+            // sort out the cmds and change path
+            match s[1] {
+                "ls" => (),
+                "cd" => cd(s[2], &mut path),
+                _ => panic!(),
+            }
+        } else {
+            let current_dir = path.join("/");
+            //insert dir into list
+            if !dirs.contains_key(&current_dir) {
+                dirs.insert(current_dir.clone(), HashSet::new());
+                // some advanced bullshittery right here | GOTTA LEARN HOW FUCKIN HASHMAPS WORK
+            }
+
+            // process files
+            if !line.starts_with("dir") {
+                let (size, name) = line.split_once(" ").unwrap();
+                let size = size.parse().unwrap();
+                dirs.get_mut(&current_dir).unwrap().insert((name, size));
             }
         }
     });
+    let sizes: Vec<_> = dirs
+        .keys()
+        .map(|k| dir_size(k, &dirs, &mut HashSet::new()))
+        .collect();
 
-    dirs
+    let delta = 30_000_000 + sizes.iter().max().unwrap() - 70_000_000;
+    (
+        sizes.iter().filter(|&&n| n <= 100_000).sum(),
+        *sizes.iter().filter(|&&n| n >= delta).min().unwrap(),
+    )
 }
