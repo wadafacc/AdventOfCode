@@ -11,8 +11,10 @@ fn main() {
 }
 
 fn render(crt: String) {
+    let mut row: String = String::from("");
+
     crt.chars().into_iter().enumerate().for_each(|(pixel, c)| {
-        print!("{:?}", c);
+        row += &c.to_string();
         if pixel == 39
             || pixel == 79
             || pixel == 119
@@ -20,50 +22,42 @@ fn render(crt: String) {
             || pixel == 199
             || pixel == 239
         {
-            println!();
+            println!("{:?}", row);
+            row = String::from("");
         }
     });
     println!();
 }
 
 fn draw_crt(reg: i32, cycle: i32) -> char {
-    let crt_line_len = [40, 80, 120, 160, 200, 240];
-    let mut c = 0;
-    if crt_line_len.contains(&c) {
-        c = 0;
-    } else {
-    }
-    if c == reg || c == reg + 1 || c == reg + 2 {
+    if cycle == reg || cycle == reg + 1 || cycle == reg + 2 {
         return '#';
     } else {
         return '.';
     }
 }
 
-fn exec(input: Vec<Vec<&str>>, cycle_points: Vec<i32>) -> i32 {
+fn exec(input: Vec<Vec<&str>>, _cycle_points: Vec<i32>) {
     let mut crt: String = String::from("");
     let mut cycles = 0;
     let mut registry = 1;
-    let mut sum = 0;
 
     for l in input {
         for _ in 0..l.len() {
+            if cycles == 40 {
+                cycles = 0;
+            }
             cycles += 1;
             crt += &draw_crt(registry, cycles).to_string();
-            println!(
-                "Current Cycle: {:?} | Reg: {:?} | crt {:?}",
-                cycles, registry, crt
-            );
 
-            // part 1
-            if cycle_points.contains(&cycles) {
-                sum += cycles * registry;
-            }
+            // println!(
+            //     "Current Cycle: {:?} | Reg: {:?} | crt {:?}",
+            //     cycles, registry, crt
+            // );
         }
         command(l, &mut registry);
     }
-    // render(crt);
-    sum
+    render(crt);
 }
 
 fn command(cmd: Vec<&str>, registry: &mut i32) {
