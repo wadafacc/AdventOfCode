@@ -1,14 +1,14 @@
-use std::collections::{BTreeMap, HashMap};
+use core::panic;
+use std::collections::{BTreeMap};
 
 #[derive(Default, Debug, Clone)]
 struct Monke {
     id: i32,
-    inventory: Vec<i32>,
     operation: Operation,
-    test: i32,
+    test: u128,
     true_outcome: i32,
     false_outcome: i32,
-    inspect_count: i32,
+    inspections: u128,
 }
 
 #[derive(Default, Debug, Clone)]
@@ -17,82 +17,94 @@ struct Operation {
     last: String,
 }
 
+#[derive(Default, Debug, Clone)]
+struct Item {
+    monke_id:i32,
+    value:u128
+}
+
 fn main() {
     let input: Vec<&str> = include_str!("../data.txt").lines().collect();
-    let monkes: BTreeMap<i32, Monke> = monke_do_monke_bisnis(parse(input));
+    let (mut monkes, mut inventory) = parse_input(input);
+    process_business(&mut monkes, &mut inventory, 10000);
+    monkes.iter().for_each(|m|println!("{:?}", m.inspections));
+}
 
-    for m in monkes.values() {
-        println!("{:?}", m);
+
+
+fn parse_op(op:char, i:u128,last:u128)-> u128{
+    let mut new_prio = 0.0;
+    match op {
+        '*' => {
+            new_prio = ((i * last)) as f64
+        }
+        '/' => {
+            new_prio = ((i / last)) as f64
+        }
+        '+' => {
+            new_prio = ((i + last)) as f64
+        }
+        '-' => {
+            new_prio = ((i - last)) as f64
+        }
+        _ => panic!("need op bruv"),
     }
+
+    // new_prio /= 3.0;
+    // uncomment this for part 1
+    return new_prio.floor() as u128;
 }
 
-fn init_monke_bisnis(mut monkes: BTreeMap<i32, Monke>, trade_amount: i32) -> BTreeMap<i32, Monke> {
-    for i in 0..trade_amount {}
-    monkes
-}
-
-fn parse_last(item: i32, last: String) -> i32 {
+fn parse_last(item: u128, last: String) -> u128 {
     if last == "old" {
         item
     } else {
-        last.parse::<i32>().unwrap()
+        last.parse::<u128>().unwrap()
     }
 }
 
-fn monke_do_monke_bisnis(mut monkes: BTreeMap<i32, Monke>) -> BTreeMap<i32, Monke> {
-    for monke in monkes.to_owned() {
-        println!("Monkey: {:?}", monke.0);
-        println!("Inventory length: {:?}", monke.1.inventory.len());
-        let mut new_prio: f32 = 0.0;
-        for i in monke.1.inventory {
-            println!("Inspected item: {:?}", i);
+fn process_business(monkes:&mut Vec<Monke>,inventory: &mut Vec<Item>, rounds:i32) {
 
-            let last = parse_last(i, monke.1.operation.last.to_owned());
-            match monke.1.operation.operand {
-                '*' => {
-                    new_prio = ((i * last)) as f32
+    for _ in 0..rounds{
+        for monkey in &mut *monkes {
+            // iterate through all monkeys
+            for item in &mut *inventory{
+                if item.monke_id != monkey.id { // only go through this monke's inventory
+                }else{
+                    let last = parse_last(item.value, monkey.operation.last.clone());
+                    let prio = parse_op(monkey.operation.operand, item.value,last);
+                    item.value = prio;
+                    if prio % monkey.test == 0 {
+                        item.monke_id = monkey.true_outcome;
+                        println!("TRUE: Thrown to: {:?}", monkey.true_outcome);                    
+                    } else {
+                        item.monke_id = monkey.false_outcome;
+                        println!("FALSE: Thrown to: {:?}", monkey.false_outcome);                    
+                    }
+                    monkey.inspections += 1;
                 }
-                '/' => {
-                    new_prio = ((i / last)) as f32
-                }
-                '+' => {
-                    new_prio = ((i + last)) as f32
-                }
-                '-' => {
-                    new_prio = ((i - last)) as f32
-                }
-                _ => panic!("need op bruv"),
             }
-            println!("New worry level of item: {:?}", new_prio);
-            
-            new_prio /= 3.0;
-            new_prio = new_prio.floor();
-            println!("New worry level of item / 3: {:?}", new_prio);
-            
-
-            if (new_prio as i32) % monke.1.test == 0 {
-                monkes.entry(monke.1.true_outcome).and_modify(|monk| {
-                    monk.to_owned().inventory.push(new_prio as i32);     
-                    println!("TRUE: Thrown to: {:?}", monk.id);                    
-                    println!("Inventory of {:?}: {:?}", monk.id, monk.inventory);
-                });
-            } else {
-                monkes.entry(monke.1.false_outcome).and_modify(|monk| {
-                    monk.inventory.push(new_prio as i32);     
-                    println!("FALSE: Thrown to: {:?}", monk.id);
-                    println!("Inventory of {:?}: {:?}", monk.id, monk.inventory);
-                });
-            }
-            //remove item from original monke
-            monkes
-                .entry(monke.1.id)
-                .and_modify(|monk| {
-                    monk.inventory.remove(0);
-                    monk.inspect_count += 1;
-                });
         }
     }
-    return monkes;
+
+    /*
+    ---- Structure ----
+    1. Iterate through monkeys x times
+        2. go through general inventory and do shiet
+            3. Move values [!]
+                4. delete value from origin
+    */
+    
+    /*
+    --- Prio mover ---
+        if (prio) % test == 0 {
+            monkes[true_val].inventory.push(prio);
+            println!("TRUE: Thrown to: {:?}", true_val);                    
+        } else {
+            monkes[false_val].inventory.push(prio);
+            println!("FALSE: Thrown to: {:?}", false_val);                    
+        }
+    */
 }
 
 /*
@@ -103,27 +115,48 @@ Monkey 0:
     If true: throw to monkey 2
     If false: throw to monkey 3
 */
-fn parse(input: Vec<&str>) -> BTreeMap<i32, Monke> {
-    let mut monkes: BTreeMap<i32, Monke> = BTreeMap::new();
+fn parse_input(input: Vec<&str>) -> (Vec<Monke>, Vec<Item>) {
+    let mut inventory: Vec<Item> = Vec::new();
+    let mut monkes: Vec<Monke> = Vec::new();
     let mut new: Monke = Monke::default();
     let mut id = 0;
 
     for l in 0..input.len() {
         let line: Vec<&str> = input[l].split(" ").collect();
-        if input[l].starts_with("Monkey") {
-            new = Monke::default(); // init new monke
-            let x = line.last().unwrap().replace(":", "");
-            id = x.parse::<i32>().unwrap(); // set id
-            new.id = id;
+
+        match line[0].trim() {
+            "Monkey" => {
+                new = Monke::default();
+                new.id = line.last().unwrap().replace(":", "").parse::<i32>().unwrap();
+            },
+            _ => ()
+        } 
+
+        if input[l].contains("Test"){
+            let res: Vec<&str> = line.last().unwrap().split(" ").collect();
+            new.test = res.last().unwrap().parse::<u128>().unwrap()
+        }
+
+        if input[l].contains("true"){
+            let res: Vec<&str> = line.last().unwrap().split(" ").collect();
+            new.true_outcome = res.last().unwrap().parse::<i32>().unwrap()
+        }
+        if input[l].contains("false"){
+            let res: Vec<&str> = line.last().unwrap().split(" ").collect();
+            new.false_outcome = res.last().unwrap().parse::<i32>().unwrap()
         }
         if input[l].contains("Starting") {
             let mut loin: Vec<&str> = input[l].split(":").collect();
             loin.remove(0);
             let numbas: Vec<&str> = loin[0].split(",").collect();
-            new.inventory = numbas
+            let items:Vec<u128> = numbas
                 .iter()
-                .map(|f| f.trim().parse::<i32>().unwrap())
+                .map(|f| f.trim().parse::<u128>().unwrap())
                 .collect();
+
+            for i in items {
+                inventory.push(Item{monke_id:new.id, value:i});
+            }
         }
 
         if input[l].contains("Operation") {
@@ -134,23 +167,12 @@ fn parse(input: Vec<&str>) -> BTreeMap<i32, Monke> {
             new.operation = new_op;
         }
 
-        if input[l].contains("Test") {
-            let res: Vec<&str> = line.last().unwrap().split(" ").collect();
-            new.test = res.last().unwrap().parse::<i32>().unwrap();
-        }
-        if input[l].contains("true") {
-            let res: Vec<&str> = line.last().unwrap().split(" ").collect();
-            new.true_outcome = res.last().unwrap().parse::<i32>().unwrap();
-        }
-        if input[l].contains("false") {
-            let res: Vec<&str> = line.last().unwrap().split(" ").collect();
-            new.false_outcome = res.last().unwrap().parse::<i32>().unwrap();
-        }
-        // insert new monke
+        // insert new monkey
         if input[l] == "" || l == input.len() - 1 {
-            monkes.insert(id, new.clone());
+            monkes.push(new.to_owned());
         }
     }
 
-    return monkes;
+    return (monkes, inventory);
 }
+
