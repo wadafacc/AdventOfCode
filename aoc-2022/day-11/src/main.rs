@@ -64,7 +64,7 @@ fn parse_last(item: u128, last: String) -> u128 {
 }
 
 fn process_business(monkes:&mut Vec<Monke>,inventory: &mut Vec<Item>, rounds:i32) {
-
+    let absolute_limit:u128 = monkes.iter().map(|m| m.test).product();
     for _ in 0..rounds{
         for monkey in &mut *monkes {
             // iterate through all monkeys
@@ -73,13 +73,13 @@ fn process_business(monkes:&mut Vec<Monke>,inventory: &mut Vec<Item>, rounds:i32
                 }else{
                     let last = parse_last(item.value, monkey.operation.last.clone());
                     let prio = parse_op(monkey.operation.operand, item.value,last);
-                    item.value = prio;
+                    item.value = prio % absolute_limit; // -> IMPORTANT
                     if prio % monkey.test == 0 {
                         item.monke_id = monkey.true_outcome;
-                        println!("TRUE: Thrown to: {:?}", monkey.true_outcome);                    
+                        // println!("TRUE: Thrown to: {:?}", monkey.true_outcome);                    
                     } else {
                         item.monke_id = monkey.false_outcome;
-                        println!("FALSE: Thrown to: {:?}", monkey.false_outcome);                    
+                        // println!("FALSE: Thrown to: {:?}", monkey.false_outcome);                    
                     }
                     monkey.inspections += 1;
                 }
