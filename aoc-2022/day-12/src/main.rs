@@ -1,5 +1,3 @@
-use std::vec;
-
 #[derive(Clone,Debug, Default, PartialEq)]
 struct Node {
     height: char,
@@ -13,10 +11,13 @@ struct Node {
 fn main() {
     let input:&str = include_str!("../data.txt");
     let (map,node_map) = parse_map(input);
-    setup(map.clone(), node_map);
+    setup(map.clone(), node_map.clone());
 
-    for l in map {
-        println!("{:?}", l);
+    for l in node_map {
+        for node in l {
+            print!("{:?}", node.y);
+        }
+        println!();
     }
 }
 
@@ -71,9 +72,11 @@ fn get_neighbors(n:Node, map:Vec<Vec<Node>>) -> Vec<Node>{
         for y in 0..map.len() {
             if x == n.x -1  && y == n.y|| x == n.x +1  && y == n.y {
                 println!("{:?}", map[y][x]);
+                neighbors.push(map[y][x].clone());
             }
             if y == n.y -1 && x == n.x || y == n.y +1  && x == n.x{
                 println!("{:?}", map[y][x]);
+                neighbors.push(map[y][x].clone());
             }
         } 
     }
@@ -86,7 +89,7 @@ fn parse_map(input: &str) -> (Vec<Vec<char>>, Vec<Vec<Node>>){
 
     let mut map:Vec<Vec<char>> = Vec::new();
     let mut filler:Vec<char> = Vec::new(); 
-    for i in 0..line[0].len() + 2 {
+    for _ in 0..line[0].len() + 2 {
         filler.push('#');
     }
     map.push(filler.clone());
@@ -104,14 +107,13 @@ fn parse_map(input: &str) -> (Vec<Vec<char>>, Vec<Vec<Node>>){
 
     // return node map
     let mut node_map: Vec<Vec<Node>> = Vec::new();
-    for l in &map{
+    for y in 0..map.len(){
         let mut row:Vec<Node> = Vec::new();
-        for c in l {
-            let pos: (usize,usize) = get_point(*c, map.clone());
+        for x in 0..map[0].len() {
             let new = Node{
-                height: *c,
-                x: pos.0,
-                y:pos.1
+                height: map[y][x],
+                x: x,
+                y:y
             };
             row.push(new);
 
@@ -125,7 +127,7 @@ fn get_point(c:char, map:Vec<Vec<char>>) -> (usize,usize) {
     let mut pos:(usize,usize) = (0,0);
     for ln in 0..map.len() {
         if map[ln].contains(&c) {
-            pos = (map[ln].iter().position(|&p| p == c).unwrap() as usize,ln as usize);
+            pos = (map[ln].iter().position(|p| p == &c).unwrap() as usize,ln as usize);
         }
     }
     pos
