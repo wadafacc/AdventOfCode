@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug, Default)]
 struct Bag {
     red: i32,
     green: i32,
@@ -14,57 +14,42 @@ fn main() {
     let file = File::open("./data.txt").unwrap();
     let reader = BufReader::new(file);
 
-    let mut valid_games :Vec<i32> = Vec::new();
-
-
-    let bag = Bag {
-        red: 12,
-        green: 13,
-        blue: 14
-    };
+    let mut sum = 0;
 
     for (_index, line) in reader.lines().enumerate() {
         let line = line.unwrap();
-        let (id, vals) = line.split_once(":").unwrap();
+        let (_id, vals) = line.split_once(":").unwrap();
 
-        let mut possible = true;
+        let mut biggest = Bag {..Default::default()};
         for attempt in vals.split(";") {
-
-            if !check_cubes(attempt.to_string(), bag) {
-                possible = false;
-            }
+            check_cubes(attempt.to_string(), &mut biggest);
         }
 
-        if possible {
-            valid_games.push(id.split_once(" ").unwrap().1.parse().unwrap());
-        }
-
+        sum += biggest.red * biggest.green * biggest.blue;
     }
 
-    let mut sum = 0;
-    for id in valid_games {
-        sum += id;
-    }
+
     println!("{}",sum);
 }
 
-fn check_cubes(cubes: String, bag:Bag) -> bool {
-    let mut bag = bag;
-    
+fn check_cubes(cubes: String, highest: &mut Bag){
+
+
     for c in cubes.split(",") {
         let (a, color) = c.trim().split_once(" ").unwrap();
         let amnt = a.parse::<i32>().unwrap();
 
         match color {
-            "red" => bag.red -= amnt,
-            "green" => bag.green -= amnt,
-            "blue" => bag.blue -= amnt,
+            "red" => {
+                highest.red = if amnt > highest.red { amnt } else { highest.red };
+            },
+            "green" => {
+                highest.green = if amnt > highest.green { amnt } else { highest.green };
+            },
+            "blue" => {
+                highest.blue = if amnt > highest.blue { amnt } else { highest.blue };
+            },
             _ => panic!()
         }
-
-        if (bag.red < 0) | (bag.green < 0) | (bag.blue < 0) {
-            return false;
-        }
     }
-    return true
 }
