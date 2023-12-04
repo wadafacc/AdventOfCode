@@ -13,20 +13,12 @@ fn main() {
         line.split_once(":")
         .unwrap().1.split_once("|").unwrap();
         
-        println!("CARD: {} | {}", card_nums, winning_nums);
-
         let mut nums: Vec<&str> = card_nums.split(" ").collect();
         nums.retain(|&x|x != "");
 
         let mut to_check: Vec<&str> = winning_nums.split(" ").collect();
-        to_check.retain(|&x|x != "");
+        to_check.retain(|&x|x != "" && nums.contains(&x));
 
-        to_check.retain(|&i| nums.contains(&i));
-
-        println!("WINNING NUMBERS: {:?}", to_check);
-
-        if to_check.len() > 0 {
-        }
         cards.push((1,to_check.len()));
     });
 
@@ -36,10 +28,6 @@ fn main() {
                 cards[i+j].0 += 1;
             }
         }
-    }
-
-    for x in cards.clone() {
-        println!("CARD: {:?}",x);
     }
 
     let total:i32 = cards.iter().map(|x|x.0).sum();
