@@ -15,7 +15,7 @@ fn main() {
 
     for l in node_map {
         for node in l {
-            print!("{:?}", node.y);
+            print!("{:?}", node.height);
         }
         println!();
     }
@@ -45,10 +45,16 @@ fn some_pathfinding_algo(map: Vec<Vec<Node>>, start: Node, target: Node) {
 
     unvisited.push(start);
     while unvisited.len() != 0 {
-        let current = unvisited[0].clone();
+        let mut current = unvisited[0].clone();
         for i in 0..unvisited.len() {
             // get distance for each neighbor
-            let neighbors = get_neighbors(current.clone(), map.to_vec());
+            let neighbors = get_neighbors(current, map.to_vec());
+            for n in 0..neighbors.len() {
+                if theoretical_dist(neighbors[n].clone(), target.clone()) < theoretical_dist(current, target.clone()) 
+                && (height_diff(neighbors[n].clone(), current)as i32).abs() < 2 {
+                    current = neighbors[n].clone();
+                }
+            }
         }
     }
 
@@ -61,8 +67,12 @@ fn some_pathfinding_algo(map: Vec<Vec<Node>>, start: Node, target: Node) {
     */ 
 }
 
-fn theoretical_dist(x:usize, y:usize, target: Node) -> (i32,i32) {
-    return ((target.x - x) as i32, (target.y - y) as i32);
+fn theoretical_dist(current:Node, target: Node) -> (i32,i32) {
+    return ((target.x - current.x) as i32, (target.y - current.y) as i32);
+}
+
+fn height_diff(n:Node, current:Node) -> u32{
+    return (n.height as u32) - (current.height as u32);
 }
 
 fn get_neighbors(n:Node, map:Vec<Vec<Node>>) -> Vec<Node>{
