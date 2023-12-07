@@ -11,7 +11,7 @@ fn main() {
     let mut cards:Vec<(i32, usize)> = Vec::new();
 
     lines.iter().enumerate().for_each(|(_i,line)| {
-        
+
         let (card_nums, winning_nums) = 
         line.split_once(":")
         .unwrap().1.split_once("|").unwrap();
