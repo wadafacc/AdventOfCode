@@ -15,13 +15,11 @@ module Day1
 
 	n = 0
   while n < left.size
-    diff = (left[n] - right[n]).abs
-    
-    d += diff
+    d += right.count(left[n]) * left[n]
 
     n += 1
   end
 
-  puts "The difference is"
+  puts "The similarity score is"
   puts d
 end
