@@ -1,0 +1,13 @@
+name: day-1
+version: 0.1.0
+
+authors:
+  - wadafacc <schlumpftimo14@gmail.com>
+
+targets:
+  day-1:
+    main: src/day-1.cr
+
+crystal: '>= 1.14.0'
+
+license: MIT
