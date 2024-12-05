@@ -27,21 +27,14 @@ func main() {
 		if fileScanner.Text() == "" {
 			break
 		}
-		rule := getRules(fileScanner.Text())
-
-		ints = append(ints, rule)
+		ints = append(ints, getRules(fileScanner.Text()))
 	}
 
 	for fileScanner.Scan() {
-		ns := strings.Split(fileScanner.Text(), ",")
-		var temp []int64
-		for _, v := range ns {
-			i, _ := strconv.ParseInt(v, 10, 64)
-			temp = append(temp, i)
-		}
-		sets = append(sets, temp)
+		sets = append(sets, getSets(fileScanner.Text()))
 	}
 
+	// main loop
 	for _, set := range sets {
 		faulty := false
 		for i := 0; i < len(set); i++ {
@@ -49,12 +42,17 @@ func main() {
 			if len(rules) == 0 {
 				continue
 			}
+
 			pre := set[0:i]
-			if checkSlice(pre, rules) {
+			_, idx := checkSlice(pre, rules)
+
+			if idx != -1 {
 				faulty = true
+				set = fixSet(set, i, rules, ints)
 			}
 		}
-		if !faulty {
+		if faulty {
+			fmt.Println("FAULTY ADDED: ", set, "\n")
 			correctSets = append(correctSets, set)
 		}
 	}
@@ -69,8 +67,28 @@ func main() {
 	readFile.Close()
 }
 
-func getRules(l string) (ret instruction) {
+func fixSet(s []int64, i int, rules []instruction, allrules []instruction) []int64 {
+	faulty := true
+	for faulty {
+		pre := s[0:i]
+		_, idx := checkSlice(pre, rules)
 
+		if idx == -1 {
+			faulty = false
+			break
+		}
+
+		temp := s[idx]
+		s[idx] = s[i]
+		s[i] = temp
+
+		rules = filter(allrules, s[i])
+	}
+
+	return s
+}
+
+func getRules(l string) (ret instruction) {
 	ln := strings.Split(l, "|")
 
 	num, _ := strconv.ParseInt(ln[0], 10, 64)
@@ -79,23 +97,31 @@ func getRules(l string) (ret instruction) {
 	return instruction{num, val}
 }
 
+func checkSlice(s []int64, i []instruction) (int64, int) {
+	for j := 0; j < len(s); j++ {
+		for _, inst := range i {
+			if s[j] == inst.val {
+				return s[j], j
+			}
+		}
+	}
+	return -1, -1
+}
+
+func getSets(l string) (ret []int64) {
+	ns := strings.Split(l, ",")
+	for _, v := range ns {
+		i, _ := strconv.ParseInt(v, 10, 64)
+		ret = append(ret, i)
+	}
+	return
+}
+
 func filter(list []instruction, val int64) (ret []instruction) {
 	for _, v := range list {
 		if v.num == val {
 			ret = append(ret, v)
 		}
 	}
-
 	return
-}
-
-func checkSlice(s []int64, i []instruction) bool {
-	for _, v := range s {
-		for _, inst := range i {
-			if v == inst.val {
-				return true
-			}
-		}
-	}
-	return false
 }
