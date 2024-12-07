@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs::read_to_string, thread, time::Duration};
+use std::{collections::{HashMap, HashSet}, fs::read_to_string, thread, time::Duration};
 
 //                                  up    right   down    left
 const DIRS: [(isize,isize); 4] = [(-1,0), (0,1), (1,0), (0,-1)];
@@ -7,16 +7,26 @@ fn main() {
   let str_in = read_to_string("./inputs.txt").expect("no file found");
 
   let mut visited: HashMap<(isize, isize), char> = HashMap::new();
+  let mut loopable: HashSet<(isize, isize)> = HashSet::new();
 
   let (map, mut guard_coords) = get_map(str_in);
   
+  let mut counter = 0;
   let mut current_dir = 0;
   loop {
-    thread::sleep(Duration::from_millis(500));
-    fancy_print(map.clone(), visited.clone(), guard_coords);
+    thread::sleep(Duration::from_millis(250));
+    fancy_print(map.clone(), visited.clone(),loopable.clone(), guard_coords);
     let n = get_next_tile(map.clone(), guard_coords, DIRS[current_dir]);
     match n {
       Ok((coords, c)) => {
+        if visited.contains_key(&guard_coords) {
+          let next_tile = get_next_tile(map.clone(), guard_coords, DIRS[turn(current_dir)]).ok().expect("oops");
+          let next_next = get_next_tile(map.clone(), next_tile.0, DIRS[turn(current_dir)]).ok().expect("oops");
+          
+          if visited.contains_key(&next_tile.0) && visited.contains_key(&next_next.0) {
+            loopable.insert(coords);
+          }
+        }
         visited.insert(guard_coords, c);
         if c == '#' {
           current_dir = turn(current_dir);
@@ -30,17 +40,21 @@ fn main() {
   }
 
   println!("LEN: {:?}", visited.len() + 1);
+  println!("OBSTACLE COUNTER: {:?}", counter);
 }
 
-fn fancy_print(map: Vec<Vec<char>>, visited: HashMap<(isize, isize), char>, guard: (isize, isize)) {
+fn fancy_print(map: Vec<Vec<char>>, visited: HashMap<(isize, isize), char>, loops: HashSet<(isize, isize)>, guard: (isize, isize)) {
   print!("\x1B[2J");
   for (y, ln) in map.iter().enumerate() {
     for (x, c) in ln.iter().enumerate() {
-      if visited.contains_key(&(y as isize,x as isize)) {
-        print!("x");
-      }
-      else if (y as isize,x as isize) == guard {
+      if (y as isize,x as isize) == guard {
         print!("\x1b[93m^\x1b[0m");
+      }
+      else if loops.contains(&(y as isize,x as isize)) {
+        print!("\x1b[46mO\x1b[0m");
+      }
+      else if visited.contains_key(&(y as isize,x as isize)) {
+        print!("x");
       }
       else {
         print!("{c}");
