@@ -1,5 +1,4 @@
 # Advent of Code 2025
-
 ```
         *                                                        *
    ___      _                 _            __   ____          _      
@@ -22,7 +21,7 @@ A polyglot journey through Advent of Code 2025, solving each day's puzzle in a d
 
 ## 🔗 Quick Links
 
-[Day 1 - C](#day-1-c)
+[Day 1 - C](./day-1)
 
 ## 🎄 Progress
 
