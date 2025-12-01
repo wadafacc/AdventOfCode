@@ -27,14 +27,17 @@ int main() {
     char** out = str_split_once(line, 1, len);
     int a;
     sscanf(out[1], "%d", &a);
-    if (*out[0] == RIGHT) {
-      s += a;
-    } else {
-      s -= a;
-    }
+    printf("S: %d, D(%s) A: %d ", s,out[0], a);
 
-    s = (s + 100) % 100;
-    if (s == 0) c++;
+    for (int i = 0; i < a; i++) {
+      if (*out[0] == RIGHT) {
+        s++;
+      } else {
+        s--;
+      }
+      s = (s+100) % 100;
+      if (s == 0) c++;
+    }
   }
 
   printf("END: %d\n", c);
