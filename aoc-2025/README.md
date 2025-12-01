@@ -1,29 +1,29 @@
 # Advent of Code 2025
 
-```
-                 *             *
-        *              *                *
-             *                               
-      *           ADVENT OF CODE 2025         *
-                                                  
-         *      25 Days, 25 Languages      *
-    *                                            *
-             *                       *
-         .        *         .             .
-    *          *        *        *            *
-        .    /\      *      /\       /\    .
-            /  \          */  \  *  /  \
-           /    \    *     /    \   /    \    *
-      *   /  /\  \        /  /\  \ /  /\  \
-         /  /  \  \   *  /  /  \  X  /  \  \  *
-        /  /    \  \    /  /    \/ \/    \  \
-       /__/      \__\  /__/     /\  \     \__\
-    *     ||||          ||||   ||||  ||||       *
-          ||||          ||||   ||||  ||||
-```
 ![C](https://img.shields.io/badge/C-A8B9CC?style=flat-square&logo=c&logoColor=black)
 
+```
+        *                                                        *
+   ___      _                 _            __   ____          _      
+  / _ \    | |               | |          / _| / ___|        | |     
+ / /_\ \ __| |_   _____ _ __ | |_    ___ | |_ | |     ___  __| | ___ 
+ |  _  |/ _` \ \ / / _ \ '_ \| __|  / _ \|  _|| |    / _ \/ _` |/ _ \
+ | | | | (_| |\ V /  __/ | | | |_  | (_) | |  | |___| (_) | (_| |  __/
+ \_| |_/\__,_| \_/ \___|_| |_|\__|  \___/|_|   \____|\___/ \__,_|\___|
+                                                                        
+       *           * 25 Days, 25 Languages *               *          
+  ^                     2025 Edition                           ^
+ /o\         ^                                    ^           /o\
+ /|\         |\                                  /|\          /|\
+ /^\        /^\                                  /^\          /^\
+  |          |                                    |            |
+```
+
 A polyglot journey through Advent of Code 2025, solving each day's puzzle in a different programming language.
+
+## 🔗 Quick Links
+
+[Day 1 - C](#day-1-c)
 
 ## 🎄 Progress
 
