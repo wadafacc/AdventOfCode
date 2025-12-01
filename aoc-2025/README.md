@@ -1,7 +1,5 @@
 # Advent of Code 2025
 
-![C](https://img.shields.io/badge/C-A8B9CC?style=flat-square&logo=c&logoColor=black)
-
 ```
         *                                                        *
    ___      _                 _            __   ____          _      
@@ -18,6 +16,7 @@
  /^\        /^\                                  /^\          /^\
   |          |                                    |            |
 ```
+![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
 
 A polyglot journey through Advent of Code 2025, solving each day's puzzle in a different programming language.
 
