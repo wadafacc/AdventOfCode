@@ -17,16 +17,13 @@
 ```
 ![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
 
-A polyglot journey through Advent of Code 2025, solving each day's puzzle in a different programming language.
-
 ## 🔗 Quick Links
 
 [Day 1 - C](./day-1)
 
 ## 🎄 Progress
 
-### Day 1: C
-**Language:** C  
+### Day 1
 **Challenge:** North Pole Navigation Simulator
 
 The elves need help tracking their position on a circular track numbered 0-99. Starting at position 50, they receive a series of movement instructions:
