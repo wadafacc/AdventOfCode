@@ -4,10 +4,15 @@
 int arr_len(char* a);
 int char_to_int(char n);
 char int_to_char(int n);
+long sum_arr(char* arr);
+void del(char* arr, int *n, int key);
+long _pow(int b, int e);
+
+const int MAX_LEN = 12;
 
 int main() {
   FILE* fp;
-  char* ln = NULL; 
+  char* line = NULL; 
   size_t len = 0;
 
   fp = fopen("./day-3/input.txt", "r");
@@ -16,22 +21,27 @@ int main() {
     exit(EXIT_FAILURE);
   }
 
-  int sum = 0;
-  while (getline(&ln, &len, fp) != -1) {
-    printf("%s", ln);
-    int max = 0;
-    for (int i = 0; i < arr_len(ln); i++) {
-      int n = char_to_int(ln[i]);
-      for (int j = i+1; j < arr_len(ln); j++) {
-        int m = char_to_int(ln[j]);
-        int nm = (n * 10) + m;
-        if (nm > max) max = nm;
+  long sum = 0;
+  while (getline(&line, &len, fp) != -1) {
+    printf("%s", line);
+
+    // get first biggest num
+    int xlen = arr_len(line);
+    int idx = -1;
+
+    char num[MAX_LEN] = { '0' };
+    for (int n = 0; n < MAX_LEN; n++) {
+      for (int i = idx + 1; i < (xlen - 2 - (10 - n)); i++) {
+        if (line[i] > num[n]) {
+          num[n] = line[i];
+          idx = i;
+        }
       }
     }
-    sum += max;
+    sum += sum_arr(num);
   }
 
-  printf("\nSum: %d", sum);
+  printf("Sum: %ld", sum);
   fclose(fp);
 }
 
@@ -41,10 +51,37 @@ int arr_len(char* a) {
   return i;
 } 
 
+long sum_arr(char* arr) {
+  long sum = 0;
+  int len = arr_len(arr);
+  for (int i = 0; i < len-1; i++) {
+    sum += char_to_int(arr[i]) * _pow(10, len-i-2);
+    printf("%d", char_to_int(arr[i]));
+  }
+  printf("\n");
+  return sum;
+}
+
 int char_to_int(char n) {
   return (int)(n - '0');
 }
 
 char int_to_char(int n) {
   return (char)(n + '0');
+}
+
+void del(char* arr, int *n, int idx) {
+  for (int j = idx; j < *n - 1; j++) {
+    arr[j] = arr[j + 1];
+  }
+  // Decrease the size
+  (*n)--; 
+}
+
+long _pow(int b, int e) {
+  long sum = 1;
+  for (int i = 0; i < e; i++) {
+    sum *= b;
+  }
+  return sum;
 }
