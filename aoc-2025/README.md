@@ -18,7 +18,7 @@
 ![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
 
 ## 🔗 Quick Links
-[Day 1 - C](./day-1) | [Day 2 - C](./day-2) | [Day 3 - C](./day-3)
+[Day 1 - C](./day-1) | [Day 2 - C](./day-2) | [Day 3 - C](./day-3) | [Day 4 - C](./day-4)
 
 ## 🎄 Progress
 
@@ -106,6 +106,47 @@ gcc -o solution solution.c
 811111111111119
 234234234234278
 ```
+
+---
+
+### Day 4: Printing Department ⭐⭐
+**Language:** C  
+**Challenge:** Optimize forklift work by identifying accessible paper rolls in a grid. A roll is accessible if it has fewer than 4 adjacent rolls.
+
+**Part 1:** Count initially accessible rolls  
+Answer: `1578`
+
+**Part 2:** Simulate iterative removal - keep removing accessible rolls until none remain  
+Answer: `10132`
+
+**Key Concepts:**
+- 2D grid traversal and neighbor checking
+- Cellular automaton-like state evolution
+- Dynamic memory allocation for grid storage
+- Iterative simulation with termination condition
+- Boundary checking for 8-directional adjacency
+
+**Installation & Running:**
+```bash
+cd day-4
+gcc -o solution solution.c
+./solution
+```
+
+**Input Format:**
+```
+..@@.@@@@.
+@@@.@.@.@@
+@@@@@.@.@@
+@.@@@@..@.
+```
+
+**Algorithm:**
+1. Load grid and identify all paper rolls (`@`)
+2. For each roll, count adjacent rolls (8 directions)
+3. Mark rolls with < 4 neighbors as accessible (`x`)
+4. Remove accessible rolls and repeat until no more can be removed
+5. Sum total removals across all iterations
 
 ---
 
