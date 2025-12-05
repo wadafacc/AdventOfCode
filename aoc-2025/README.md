@@ -18,7 +18,7 @@
 ![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
 
 ## 🔗 Quick Links
-[Day 1 - C](./day-1) | [Day 2 - C](./day-2) | [Day 3 - C](./day-3) | [Day 4 - C](./day-4)
+[Day 1 - C](./day-1) | [Day 2 - C](./day-2) | [Day 3 - C](./day-3) | [Day 4 - C](./day-4) | [Day 5 - C](./day-5)
 
 ## 🎄 Progress
 
@@ -147,6 +147,54 @@ gcc -o solution solution.c
 3. Mark rolls with < 4 neighbors as accessible (`x`)
 4. Remove accessible rolls and repeat until no more can be removed
 5. Sum total removals across all iterations
+
+---
+
+### Day 5: Cafeteria ⭐⭐
+**Language:** C  
+**Challenge:** Process ingredient database to determine which IDs are fresh based on range specifications.
+
+**Part 1:** Count how many available ingredient IDs fall within fresh ranges  
+Answer: `868`
+
+**Part 2:** Calculate total count of all IDs considered fresh by the ranges  
+Answer: `354143734113772`
+
+**Key Concepts:**
+- Range merging and overlap detection
+- Interval consolidation algorithm
+- Dynamic memory management for range arrays
+- Sorting ranges for efficient merging
+- Range comparison logic (overlap/disjoint detection)
+
+**Installation & Running:**
+```bash
+cd day-5
+gcc -o solution solution.c
+./solution
+```
+
+**Input Format:**
+```
+3-5
+10-14
+16-20
+12-18
+
+1
+5
+8
+11
+17
+32
+```
+
+**Algorithm:**
+1. Parse fresh ingredient ID ranges from input
+2. Sort ranges by starting position
+3. Merge overlapping or adjacent ranges iteratively
+4. For Part 1: Check which available IDs fall in merged ranges
+5. For Part 2: Sum the sizes of all merged ranges (end - start + 1)
 
 ---
 
