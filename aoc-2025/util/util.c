@@ -123,3 +123,12 @@ void str_cpy(char* src, char** dst, int start, int len) {
   (*dst)[len-1] = '\0';
 }
 
+int str_cmp(char* this, char* that) {
+  int i = 0;
+  while (this[i] != '\0' && that[i] != '\0') {
+    if (this[i] != that[i]) return -1;
+    i++;
+  }
+  // Check if both strings ended (both hit '\0')
+  return (this[i] == '\0' && that[i] == '\0') ? 1 : -1;
+}

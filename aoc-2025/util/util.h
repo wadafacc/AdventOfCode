@@ -21,5 +21,7 @@ int count_char(char* str, int len, char c);
 void str_cpy(char* src, char** dst, int start, int len);
 // contains
 int contains(char* str, int len, char c);
+// compare 2 strings
+int str_cmp(char* this, char* that);
 
 #endif

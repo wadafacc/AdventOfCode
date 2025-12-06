@@ -2,9 +2,9 @@
 #include<stdlib.h>
 #include<util.h>
 
-const int MULT = -2;
-const int ADD = -1;
-
+const int MULT = (int)'*';
+const int ADD = (int)'+';
+const char* INVALID = "    ";
 
 int main() { 
   char* input = "./day-6/input.txt";
@@ -20,51 +20,49 @@ int main() {
   }
 
   int line_count = get_lines(input);
-  int** lines = malloc(line_count * sizeof(int*));
-  int i = 0;
+  char** lines = malloc(line_count * sizeof(char*));
+  int i = 0, longest = 0;
   while (getline(&line, &_len, fp) != -1) {
     int len = str_len(line);
-    combine(&line, &len, ' ');
-    int arr_len = count_char(line, len, ' ');
-    char** arr = str_split(line, len, ' ');
-
-    lines[i] = (int*)malloc(arr_len * sizeof(int));
-    for (int j = 0; j < arr_len; j++) {
-      int n = atoi(arr[j]);
-      if (n > 0) {
-        lines[i][j] = n;
-      } else {
-        if (contains(arr[j], 5, '*')) lines[i][j] = MULT;
-        if (contains(arr[j], 5, '+')) lines[i][j] = ADD;
-      }
-    }
+    lines[i] = malloc((len+1) * sizeof(char));
+    str_cpy(line, &lines[i], 0, len+1);
+    if (len > longest) longest = len;
+    printf("Line: '%s'\n", lines[i]);
     i++;
   }
+  printf("\n");
 
-  int problem_count = 0, ii = 0;
-  while (lines[line_count-1][ii] != 0) {
-     problem_count++;
-     ii++;
-  };
-  printf("Problem Count: %d\n", problem_count);
-
+  long sum = 0;
+  int mode = 0;
   long total = 0;
-  for (int i = 0; i < problem_count; i++) {
-    int mode = 0; // add, mult
-    long sum = 0; // sum of problem
-    for (int j = line_count-1; j >= 0; j--) {
-      int number = lines[j][i];
-      if (number == 0) continue;
-      if (number < 0) { mode = number; continue; }  
-      printf("%d ", number);
-      if (sum == 0) { sum = (long)number; continue; }
-
-      if (mode == MULT) sum *= (long)number;
-      if (mode == ADD) sum += (long)number;
+  for (int i = 0; i < longest; i++) {
+    char* num = malloc((line_count-1) * sizeof(char));
+    if (lines[line_count-1][i] != ' '){
+      mode = (int)lines[line_count-1][i];
+      printf("Mode: '%c'\n", (char)mode);
     }
-    printf("Sum: %d\n", sum);
-    total += sum;
+
+    for (int j = 0; j < line_count-1; j++) {
+      num[j] = lines[j][i];
+    }
+
+    long number = atoi(num);
+    printf("%d ", number);
+    if (number == 0) { // invalid number -> ' '
+      printf("= %d\n", sum);
+      total += sum;
+      sum = 0;
+      continue; 
+    }
+    if (sum == 0) {
+      sum = number;
+      continue;
+    }
+
+    if (mode == MULT) sum *= number;
+    if (mode == ADD) sum += number;
   }
-  printf("Total: %ld\n", total);
+  printf("\nTotal: %ld\n", total);
+
   return 0;
 }
