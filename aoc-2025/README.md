@@ -4,21 +4,21 @@
    ___      _                 _            __   ____          _      
   / _ \    | |               | |          / _| / ___|        | |     
  / /_\ \ __| |_   _____ _ __ | |_    ___ | |_ | |     ___  __| | ___ 
- |  _  |/ ` \ \ / / _ \ '_ \| __|  / _ \|  _|| |    / _ \/ _` |/ _ \
+ |  _  |/ _` \ \ / / _ \ '_ \| __|  / _ \|  _|| |    / _ \/ _` |/ _ \
  | | | | (_| |\ V /  __/ | | | |_  | (_) | |  | |___| (_) | (_| |  __/
  \_| |_/\__,_| \_/ \___|_| |_|\__|  \___/|_|   \____|\___/ \__,_|\___|
                                                                         
        *           * 25 Days, 25 Languages *               *          
   ^                     2025 Edition                           ^
  /o\         ^                                    ^           /o\
- /|\         |\                                  /|\          /|\
+ /|\        /|\                                  /|\          /|\
  /^\        /^\                                  /^\          /^\
   |          |                                    |            |
 ```
 ![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
 
 ## 🔗 Quick Links
-[Day 1 - C](./day-1) | [Day 2 - C](./day-2) | [Day 3 - C](./day-3) | [Day 4 - C](./day-4) | [Day 5 - C](./day-5)
+[Day 1 - C](./day-1) | [Day 2 - C](./day-2) | [Day 3 - C](./day-3) | [Day 4 - C](./day-4) | [Day 5 - C](./day-5) | [Day 6 - C](./day-6)
 
 ## 🎄 Progress
 
@@ -195,6 +195,49 @@ gcc -o solution solution.c
 3. Merge overlapping or adjacent ranges iteratively
 4. For Part 1: Check which available IDs fall in merged ranges
 5. For Part 2: Sum the sizes of all merged ranges (end - start + 1)
+
+---
+
+### Day 6: Trash Compactor ⭐⭐
+**Language:** C  
+**Challenge:** Help a young cephalopod with her math homework by solving vertical column-based arithmetic problems.
+
+**Part 1:** Read problems left-to-right, where numbers are arranged vertically in columns  
+Answer: `5346286649122`
+
+**Part 2:** Read problems right-to-left (cephalopod style), building numbers column by column  
+Answer: `10389131401929`
+
+**Key Concepts:**
+- 2D text parsing and column extraction
+- Vertical number reading with digit position awareness
+- Dynamic string-to-number conversion
+- Bidirectional iteration (left-to-right vs right-to-left)
+- Operation detection and accumulation
+
+**Installation & Running:**
+```bash
+cd day-6
+gcc -o solution solution.c -lutil
+./solution
+```
+
+**Input Format:**
+```
+123 328  51 64 
+ 45 64  387 23 
+  6 98  215 314
+*   +   *   +  
+```
+
+**Algorithm:**
+1. Read all lines into memory, track longest line length
+2. Iterate through each column position
+3. Extract vertical digits from all rows except the last
+4. Last row contains operation symbol (`*` or `+`)
+5. Convert column characters to numbers, apply operation
+6. Empty columns (all spaces) separate problems - add result to total
+7. For Part 2: Process columns from right to left instead
 
 ---
 
