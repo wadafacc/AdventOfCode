@@ -8,7 +8,7 @@ int str_len(char* str) {
   return i;
 }
 
-int get_lines(char* filename) {
+int get_lines(const char* filename) {
   FILE* fp;
   char* line = NULL;
   size_t _len = 0;  // not really used
@@ -17,7 +17,7 @@ int get_lines(char* filename) {
   fp = fopen(filename, "r");
   if (fp == NULL) {
     perror("Error opening file");
-    return -1;
+    return 0;
   }
 
   while ((getline(&line, &_len, fp) != -1) && str_len(line) != 0) c++;
@@ -131,4 +131,33 @@ int str_cmp(char* this, char* that) {
   }
   // Check if both strings ended (both hit '\0')
   return (this[i] == '\0' && that[i] == '\0') ? 1 : -1;
+}
+
+/*
+file reader stuff
+*/
+char** file_lines(const char* filename, int* line_count, int* line_len) {
+  FILE* fp;
+  char* line = NULL;
+  size_t _len = 0;
+
+  // assume file exists
+  fp = fopen(filename, "r");
+  *line_count = get_lines(filename);
+
+  char** lines = malloc((*line_count) * sizeof(char*));
+  int i = 0;
+  while (getline(&line, &_len, fp) != -1) {
+    int len = str_len(line);
+    
+    if (*line_len == 0) *line_len = len;
+
+    lines[i] = malloc((len+1) * sizeof(char));
+    for (int j = 0; j < len; j++) {
+      lines[i][j] = line[j];
+    }
+    lines[i][len] = '\0';
+    i++;
+  }
+  return lines;
 }

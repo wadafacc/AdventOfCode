@@ -12,7 +12,7 @@ char** str_split(char* str, int len, char delim);
 // delete an element from an array and left-shift the rest
 void del(char** arr, int* len, int idx);
 // counts lines in a file
-int get_lines(char* filename);
+int get_lines(const char* filename);
 // counts chars until delimiter
 int chars_till_delim(char* str, int start, int len, char delim);
 // counts occurences in string
@@ -23,5 +23,7 @@ void str_cpy(char* src, char** dst, int start, int len);
 int contains(char* str, int len, char c);
 // compare 2 strings
 int str_cmp(char* this, char* that);
+// get lines as char**
+char** file_lines(const char* filename, int* line_count, int* line_len);
 
 #endif
