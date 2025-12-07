@@ -84,12 +84,15 @@ long path(char** arr, int row, int col, int len) {
   return 0;
 }
 
+/*
+-> Original Solution: Would take longer than the universe is old to calculate. -> 2^70 recursions
 
-// long path(char** arr, int row, int col, int len) {
-//   if (row == len) return 1;
+long path(char** arr, int row, int col, int len) {
+  if (row == len) return 1;
 
-//   char current = arr[row][col];
-//   if (current == BEAM) return path(arr, row+1, col, len);
-//   if (current == SPLIT) return path(arr, row+1, col-1, len) + path(arr, row+1, col+1, len);
-//   return 0;
-// }
+  char current = arr[row][col];
+  if (current == BEAM) return path(arr, row+1, col, len);
+  if (current == SPLIT) return path(arr, row+1, col-1, len) + path(arr, row+1, col+1, len);
+  return 0;
+}
+*/

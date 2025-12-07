@@ -8,7 +8,7 @@
  | | | | (_| |\ V /  __/ | | | |_  | (_) | |  | |___| (_) | (_| |  __/
  \_| |_/\__,_| \_/ \___|_| |_|\__|  \___/|_|   \____|\___/ \__,_|\___|
                                                                         
-       *           * 25 Days, 25 Languages *               *          
+       *           * 25 Days, All in C     *               *          
   ^                     2025 Edition                           ^
  /o\         ^                                    ^           /o\
  /|\        /|\                                  /|\          /|\
@@ -18,7 +18,7 @@
 ![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
 
 ## 🔗 Quick Links
-[Day 1 - C](./day-1) | [Day 2 - C](./day-2) | [Day 3 - C](./day-3) | [Day 4 - C](./day-4) | [Day 5 - C](./day-5) | [Day 6 - C](./day-6)
+[Day 1 - C](./day-1) | [Day 2 - C](./day-2) | [Day 3 - C](./day-3) | [Day 4 - C](./day-4) | [Day 5 - C](./day-5) | [Day 6 - C](./day-6) | [Day 7 - C](./day-7)
 
 ## 🎄 Progress
 
@@ -238,6 +238,66 @@ gcc -o solution solution.c -lutil
 5. Convert column characters to numbers, apply operation
 6. Empty columns (all spaces) separate problems - add result to total
 7. For Part 2: Process columns from right to left instead
+
+---
+
+### Day 7: Laboratories ⭐⭐
+**Language:** C  
+**Challenge:** Simulate tachyon beam behavior through a manifold with splitters. Count beam splits and quantum timeline branches.
+
+**Part 1:** Count total number of times beams split in the manifold  
+Answer: `1555`
+
+**Part 2:** Count unique timelines in quantum many-worlds interpretation  
+Answer: `12895232295789`
+
+**Key Concepts:**
+- Recursive path counting with memoization
+- Dynamic programming for exponential branching
+- 2D grid traversal and beam simulation
+- Coordinate-based memoization to avoid recomputation
+- Quantum mechanics interpretation (many-worlds)
+
+**Installation & Running:**
+```bash
+cd day-7
+gcc -o solution solution.c -lutil
+./solution
+```
+
+**Input Format:**
+```
+.......S.......
+...............
+.......^.......
+...............
+......^.^......
+...............
+.....^.^.^.....
+...............
+....^.^...^....
+...............
+...^.^...^.^...
+...............
+..^...^.....^..
+...............
+.^.^.^.^.^...^.
+...............
+```
+
+**Algorithm:**
+1. Parse manifold diagram into 2D grid
+2. Simulate beam propagation downward from start position (`S`)
+3. When beam hits splitter (`^`), create two new beams (left and right)
+4. Beams pass through empty space (`.`) unaffected
+5. For Part 1: Count total split events during simulation
+6. For Part 2: Use memoization to count unique paths (timelines)
+   - Each cell `(row, col)` caches number of paths from that point
+   - Prevents exponential time complexity (2^70 → manageable)
+7. Sum all possible timeline branches to exit
+
+**Performance Note:**
+Without memoization, Part 2 would require 2^70+ recursive calls (longer than the age of the universe). Memoization reduces this to O(rows × cols) complexity.
 
 ---
 
