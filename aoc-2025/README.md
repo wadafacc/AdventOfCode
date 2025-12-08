@@ -8,7 +8,7 @@
  | | | | (_| |\ V /  __/ | | | |_  | (_) | |  | |___| (_) | (_| |  __/
  \_| |_/\__,_| \_/ \___|_| |_|\__|  \___/|_|   \____|\___/ \__,_|\___|
                                                                         
-       *           * 25 Days, All in C     *               *          
+       *           * 25 Days, All in C *                     *          
   ^                     2025 Edition                           ^
  /o\         ^                                    ^           /o\
  /|\        /|\                                  /|\          /|\
@@ -18,7 +18,7 @@
 ![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
 
 ## 🔗 Quick Links
-[Day 1 - C](./day-1) | [Day 2 - C](./day-2) | [Day 3 - C](./day-3) | [Day 4 - C](./day-4) | [Day 5 - C](./day-5) | [Day 6 - C](./day-6) | [Day 7 - C](./day-7)
+[Day 1 - C](./day-1) | [Day 2 - C](./day-2) | [Day 3 - C](./day-3) | [Day 4 - C](./day-4) | [Day 5 - C](./day-5) | [Day 6 - C](./day-6) | [Day 7 - C](./day-7) | [Day 8 - C](./day-8)
 
 ## 🎄 Progress
 
@@ -301,6 +301,63 @@ Without memoization, Part 2 would require 2^70+ recursive calls (longer than the
 
 ---
 
+### Day 8: Playground ⭐⭐
+**Language:** C  
+**Challenge:** Connect electrical junction boxes in 3D space using Minimum Spanning Tree principles. Find optimal circuits by connecting closest pairs.
+
+**Part 1:** Connect 1000 closest pairs, multiply sizes of three largest circuits  
+Answer: `121770`
+
+**Part 2:** Connect all boxes into one circuit, multiply X coordinates of final connection  
+Answer: `7893123992`
+
+**Key Concepts:**
+- Disjoint Set Union (DSU/Union-Find) data structure
+- Minimum Spanning Tree (Kruskal's algorithm)
+- 3D Euclidean distance calculation
+- Path compression optimization
+- Union by size for balanced trees
+- Edge sorting and circuit tracking
+
+**Installation & Running:**
+```bash
+cd day-8
+gcc -o solution solution.c -lutil
+./solution
+```
+
+**Input Format:**
+```
+162,817,812
+57,618,57
+906,360,560
+592,479,940
+352,342,300
+```
+
+**Algorithm:**
+1. Parse 3D coordinates (X,Y,Z) for all junction boxes
+2. Calculate squared distances between all pairs of boxes
+3. Create edge list with distances, sort by distance (ascending)
+4. Initialize DSU: each box starts as its own circuit (parent[i] = i)
+5. Process edges in order of distance (Kruskal's algorithm):
+   - If boxes are in different circuits, connect them
+   - Merge circuits using union operation with path compression
+   - Track circuit sizes during merging
+6. For Part 1: After 1000 connections, find three largest circuits
+7. For Part 2: Continue until all boxes form one circuit, track last edge
+
+**DSU Operations:**
+- `find(x)`: Find root of x's circuit with path compression
+- `set_parent(a, b)`: Union operation, merges circuits and updates sizes
+- Path compression flattens tree structure for O(α(n)) operations
+
+**Notes:** 
+- Used squared Euclidean distance to avoid floating-point sqrt calculations while maintaining correct ordering.
+- *Disclaimer: Required some help to get to the DSU idea / implementation from ChatGPT/Claude!*
+
+---
+
 ## 📝 Notes
 - Each day's solution is contained in its own directory (`day-1/`, `day-2/`, etc.)
 - Input files are stored as `input.txt` within each day's directory
@@ -308,9 +365,9 @@ Without memoization, Part 2 would require 2^70+ recursive calls (longer than the
 - Some solutions require the math library: compile with `-lm` flag
 
 ## 🎯 Goals
-- Explore 25 different programming languages
+- Master C programming through diverse challenges
 - Complete all Advent of Code 2025 challenges
-- Learn new paradigms and approaches to problem-solving
+- Explore different algorithms and data structures in C
 
 ---
 
