@@ -1,12 +1,15 @@
+/*
+-> Disclaimer: Required some help to get to the DSU idea from chatgpt/claude!
+*/
+
 #include<stdio.h>
 #include<stdlib.h>
 
 #include<util.h>
 
-
 typedef struct Edge {int a,b; long long distance; } Edge;
 const char* filename = "./day-8/input.txt";
-int LIMIT = 1000;
+int LIMIT = 10000000000; // absurdly high
 
 int* line_to_point(char* line);
 // calculate distance between points
@@ -63,13 +66,19 @@ int main() {
 
   qsort(map, count, sizeof(Edge), cmp_dist);
 
+  for (int i = 0; i < count; i++) {
+    printf("%d, %d\n", coords[map[i].a][0], coords[map[i].b]);
+  }
+
   if (LIMIT > count) LIMIT = count; // just in case there are fewer than 1000 edges
 
+  Edge last_edge;
   for (int i = 0; i < LIMIT; i++) {
     int a = map[i].a;
     int b = map[i].b;
     if (find(a) != find(b)) {
       set_parent(a, b);
+      last_edge = map[i];  // track this edge
     }
   }
 
@@ -87,9 +96,11 @@ int main() {
 
   qsort(set_sizes, n_sizes, sizeof(int), cmp_size);
 
-int top3_product = set_sizes[0] * set_sizes[1] * set_sizes[2];
+  int top3_product = set_sizes[0] * set_sizes[1] * set_sizes[2];
   printf("Top 3 sizes: %d, %d, %d -> product = %d\n",
     set_sizes[0], set_sizes[1], set_sizes[2], top3_product);
+  long product = coords[last_edge.a][0] * coords[last_edge.b][0];
+  printf("Answer: %ld\n", product);
 
 
   return 0;
