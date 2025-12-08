@@ -33,9 +33,7 @@
 
 **Installation & Running:**
 ```bash
-cd day-1
-gcc -o solution solution.c
-./solution
+make DAY=1 run
 ```
 
 **Input Format:**
@@ -65,9 +63,7 @@ Answer: `30962646823`
 
 **Installation & Running:**
 ```bash
-cd day-2
-gcc -o solution solution.c -lm
-./solution
+make DAY=2 run
 ```
 
 **Input Format:**
@@ -95,9 +91,7 @@ Answer: `172787336861064`
 
 **Installation & Running:**
 ```bash
-cd day-3
-gcc -o solution solution.c
-./solution
+make DAY=3 run
 ```
 
 **Input Format:**
@@ -128,9 +122,7 @@ Answer: `10132`
 
 **Installation & Running:**
 ```bash
-cd day-4
-gcc -o solution solution.c
-./solution
+make DAY=4 run
 ```
 
 **Input Format:**
@@ -169,9 +161,7 @@ Answer: `354143734113772`
 
 **Installation & Running:**
 ```bash
-cd day-5
-gcc -o solution solution.c
-./solution
+make DAY=5 run
 ```
 
 **Input Format:**
@@ -217,9 +207,7 @@ Answer: `10389131401929`
 
 **Installation & Running:**
 ```bash
-cd day-6
-gcc -o solution solution.c -lutil
-./solution
+make DAY=6 run
 ```
 
 **Input Format:**
@@ -260,9 +248,7 @@ Answer: `12895232295789`
 
 **Installation & Running:**
 ```bash
-cd day-7
-gcc -o solution solution.c -lutil
-./solution
+make DAY=7 run
 ```
 
 **Input Format:**
@@ -321,9 +307,7 @@ Answer: `7893123992`
 
 **Installation & Running:**
 ```bash
-cd day-8
-gcc -o solution solution.c -lutil
-./solution
+make DAY=8 run
 ```
 
 **Input Format:**
@@ -354,7 +338,7 @@ gcc -o solution solution.c -lutil
 
 **Notes:** 
 - Used squared Euclidean distance to avoid floating-point sqrt calculations while maintaining correct ordering.
-- *Disclaimer: Required some help to get to the DSU idea / implementation from ChatGPT/Claude!*
+- *Disclaimer: Required some help to get to the DSU idea/implementation from ChatGPT/Claude!*
 
 ---
 
