@@ -15,8 +15,12 @@ long part_02(Coord* coords, int line_count);
 
 
 Coord str_to_coord(char* str);
+// calculate area between two points
 long area(Coord p, Coord q);
-void flood_fill(int*** arr, int x, int y, int width, int height);
+// raycast: returns 1 if inside, 0 if outside
+int is_inside(int** arr, int x, int y);
+// checks all tiles of rectangle if they're inside polygon
+int check_bounds(int** arr, Coord q, Coord p, int offset_x, int offset_y);
 
 int main() {
   int line_count = 0, line_len = 0;
@@ -66,14 +70,12 @@ long part_02(Coord* coords, int line_count) {
   for (int i = 0; i < line_count; i++) {
     int next_idx = (i+1) % line_count;
 
-    int ox = coords[i].x - min_x;
-    int oy = coords[i].y - min_y;
-    valid_tiles[oy][ox] = VALID;
-
+    valid_tiles[coords[i].y - min_y][coords[i].x - min_x] = VALID;
+    
     // fill in edges
     int x1 = coords[i].x, x2 = coords[next_idx].x;
     int y1 = coords[i].y, y2 = coords[next_idx].y;
-
+    
     for (int dy = MIN(y1,y2); dy <= MAX(y1,y2); dy++) {
       for (int dx = MIN(x1,x2); dx <= MAX(x1,x2); dx++) {
         valid_tiles[dy - min_y][dx - min_x] = VALID;
@@ -81,34 +83,60 @@ long part_02(Coord* coords, int line_count) {
     }
   }
 
-  // find start position for flood fill
-  Coord start;
-  start.x = (coords[0].x - min_x) + 1;  // One tile right of first red tile
-  start.y = coords[0].y - min_y+1;
-
-  flood_fill(&valid_tiles, start.x, start.y, w, h);
-  // TODO: check valid rects
-
   // for (int i = 0; i < h; i++) {
   //   for (int j = 0; j < w; j++) {
-  //     printf("%d", valid_tiles[i][j]);
+  //     if (valid_tiles[i][j] == 2) {
+  //       printf("@");
+  //       continue;
+  //     } 
+  //     printf("%c", valid_tiles[i][j] == 1 ? '#' : '.');
   //   }
   //   printf("\n");
   // }
 
-  return 0;
+  long biggest_a = 0;
+  for (int i = 0; i < line_count; i++) {
+    for (int j = i+1; j < line_count; j++) {
+      // printf("Checking: (%d %d) - (%d %d)\n", coords[i].x, coords[i].y, coords[j].x, coords[j].y);
+      if (check_bounds(valid_tiles, coords[i], coords[j], min_x, min_y) == 0) continue;
+      long c_area = area(coords[i], coords[j]);
+      // printf("-> valid (%ld)\n", c_area);
+      if (c_area > biggest_a) biggest_a = c_area;
+    }
+  }
+
+  return biggest_a;
 }
 
-void flood_fill(int*** arr, int x, int y, int width, int height) {
-  if (x < 0 || x > width || y < 0 || y > height) return;
+// draw line from above to corner
+int is_inside(int** arr, int x, int y) {
+  if (arr[y][x] == VALID) return 1;
 
-  if ((*arr)[y][x] == VALID) return;
-  (*arr)[y][x] = VALID;
-  flood_fill(arr, x-1, y, width, height);
-  flood_fill(arr, x+1, y, width, height);
-  flood_fill(arr, x, y-1, width, height);
-  flood_fill(arr, x, y+1, width, height);
-  return;
+  int crossings = 0;
+  int prev = 0;  // Previous tile state
+  
+  for (int dy = 0; dy < y; dy++) {
+    int curr = (arr[dy][x] == VALID) ? 1 : 0;
+    
+    // Count transition from non-boundary to boundary
+    if (curr == 1 && prev == 0) crossings++;
+    prev = curr;
+  }
+  // printf("Count: %d\n", crossings);
+  return crossings % 2 == 0 ? 0 : 1;
+}
+
+// returns 1 if all points are inside, 0 if any is outside polygon
+int check_bounds(int** arr, Coord q, Coord p, int offset_x, int offset_y) {
+  int min_x = MIN(q.x, p.x), max_x = MAX(q.x, p.x);
+  int min_y = MIN(q.y, p.y), max_y = MAX(q.y, p.y);
+
+  for (int y = min_y; y <= max_y; y++) {
+    for (int x = min_x; x <= max_x; x++) {
+      if (is_inside(arr, x - offset_x,y - offset_y) != 1) return 0;
+    } 
+  }
+  return 1;
 }
 
 // (abs(x1 - x2) + 1) * (abs(y1 -y2) + 1)
